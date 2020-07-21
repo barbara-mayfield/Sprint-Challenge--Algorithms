@@ -98,45 +98,46 @@ class SortingRobot:
         """
         Sort the robot's list.
         """
-        # Fill this out
-        # This is a bubble sorting problem.
-        # 1. Compare the first and second item of a collection.
-        # If the first item is bigger than the second item, swap the items.
-        # 2. Move to the next item. Now, we will compare the second item with the third item.
-        # If the second item is bigger than the third, swap the items.
-        # 3. Do this for every item until the end of the list.
-        # Repeat steps 1-3 (decrementing “the end of the list” by 1 each time).
+        # If we can't move right and the light is off, return because we are done sorting.
+        if self.can_move_right() == False and self.light_is_on() == False:
+            return
 
-        # While robot's light is turned on, it is in the process of sorting.
-        # If the light turns off, it is done sorting.
-
-        # Initialize Robot Operations
-        self.set_light_on()
-
-        # Assuming the robot starts at the beginning of the list
-        # Pick up the first item and then try to move right
+        # Robot picks up the first value.
         self.swap_item()
 
-        # If we can move right
+        # While robot is able to move right
         while self.can_move_right() is True:
+            # Move right
             self.move_right()
-            # If held item is greater than item being compared, swap them
-            if self.compare_item() == 1:
-                self.swap_item()
 
-        # If we can move left and we still have items to compare
-        while self.can_move_left() is True:
-            # Move left
+            # Compare held value to current index value.
+            # If held value is less, swap values and turn light on.
+            if self.compare_item() == -1:
+                self.swap_item()
+                self.set_light_on()
+        # Upon reaching the end we should have the highest value, so we need to
+        # switch the last value if it is smaller.
+        self.swap_item()
+        self.set_light_off()
+
+        # While we can move left and held value is not None.
+        while self.can_move_left() is True and self.compare_item() is not None:
+
+            # Move left.
             self.move_left()
+
+            # If the held value is greater, swap.
             if self.compare_item() == 1:
+                # grab it!
                 self.swap_item()
-            elif self.compare_item() == None:
-                self.swap_item()
-                break
+                self.set_light_on()
+
+        # Take smallest value to the front of the list and swap with None.
+        self.swap_item()
 
         self.move_right()
-        self.sort()
         self.set_light_off()
+        self.sort()
 
 
 if __name__ == "__main__":
